@@ -34,6 +34,29 @@ function Extension() {
     }
   };
 
+  this.swapFiles = function () {
+    // Get visible editors in diff panel
+    let selectedEditors = vscode.window.visibleTextEditors;
+    // Switch files and set
+
+    if (typeof selectedEditors[2] !== "undefined") {
+      file1 = selectedEditors[2].document.uri;
+      file2 = selectedEditors[1].document.uri;
+    } else {
+      file1 = selectedEditors[1].document.uri;
+      file2 = selectedEditors[0].document.uri;
+    }
+
+    // Close diff editor
+    vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+    // Open new diff editor
+    if (file1 && file2) {
+      vscode.commands.executeCommand("vscode.diff", file1, file2);
+    } else {
+      vscode.window.showErrorMessage("Both files must be selected for swapping.");
+    }
+  };
+
   this.compareFileWithClipboard = async function (uri) {
     try {
       // Set file1 to the selected file
@@ -42,19 +65,25 @@ function Extension() {
       // Get the clipboard contents
       const clipboardContents = await vscode.env.clipboard.readText();
 
-      // Get the file path from the configuration
-      const config = vscode.workspace.getConfiguration("selectCompareTabs");
-      let filePath = config.get("clipboardFilePath");
+      // Get the file extension of the first file
+      const fileExtension = path.extname(file1.fsPath);
 
-      if (!filePath) {
+      // Get the base file path from the configuration
+      const config = vscode.workspace.getConfiguration("selectCompareTabs");
+      let baseFilePath = config.get("clipboardFilePath");
+
+      if (!baseFilePath) {
         vscode.window.showErrorMessage("Clipboard file path is not set in the configuration.");
         return;
       }
 
       // Expand tilde to home directory
-      if (filePath.startsWith("~")) {
-        filePath = path.join(os.homedir(), filePath.slice(1));
+      if (baseFilePath.startsWith("~")) {
+        baseFilePath = path.join(os.homedir(), baseFilePath.slice(1));
       }
+
+      // Construct the full file path with the appropriate extension
+      const filePath = baseFilePath.replace(/(\.[^/.]+)?$/, fileExtension);
 
       // Ensure the directory exists
       const dir = path.dirname(filePath);
@@ -97,6 +126,12 @@ function activate(context) {
     vscode.commands.registerCommand("select-compare-tabs.compareWithSelected", function (event) {
       // compareWithSelected
       ext.compareWithSelected(event);
+    })
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("select-compare-tabs.swapFiles", function () {
+      // swapFiles
+      ext.swapFiles();
     })
   );
   context.subscriptions.push(
