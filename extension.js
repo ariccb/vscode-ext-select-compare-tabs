@@ -129,12 +129,6 @@ function activate(context) {
     })
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("select-compare-tabs.swapFiles", function () {
-      // swapFiles
-      ext.swapFiles();
-    })
-  );
-  context.subscriptions.push(
     vscode.commands.registerCommand("select-compare-tabs.compareFileWithClipboard", function (event) {
       // compareFileWithClipboard
       ext.compareFileWithClipboard(event);
