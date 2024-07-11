@@ -33,6 +33,12 @@
         "category": "File"
       },
       {
+        "title": "Swap sides",
+        "category": "Diff Merge",
+        "command": "select-compare-tabs.swapFiles",
+        "icon": "$(arrow-both)"
+      },
+      {
         "command": "select-compare-tabs.compareFileWithClipboard",
         "title": "Compare File With Clipboard In New File"
       }
