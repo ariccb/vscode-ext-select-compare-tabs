@@ -33,14 +33,8 @@
         "category": "File"
       },
       {
-        "title": "Swap sides",
-        "category": "Diff Merge",
-        "command": "select-compare-tabs.swapFiles",
-        "icon": "$(arrow-both)"
-      },
-      {
         "command": "select-compare-tabs.compareFileWithClipboard",
-        "title": "Compare File With Clipboard"
+        "title": "Compare File With Clipboard In New File"
       }
     ],
     "configuration": {
@@ -49,7 +43,7 @@
       "properties": {
         "selectCompareTabs.clipboardFilePath": {
           "type": "string",
-          "default": "~/clipboard.txt",
+          "default": "~/Downloads/clipboard.txt",
           "description": "The file path where clipboard contents will be saved for comparison."
         }
       }
@@ -65,15 +59,14 @@
           "command": "select-compare-tabs.compareWithSelected",
           "group": "1_diff@2",
           "when": "editorIsOpen && !editorHasMultipleSelections && select-compare-tabs.compareEnabled"
+        },
+        {
+          "command": "select-compare-tabs.compareFileWithClipboard",
+          "group": "1_diff@3",
+          "when": "editorIsOpen && !editorHasMultipleSelections"
         }
       ],
-      "editor/title": [
-        {
-          "command": "select-compare-tabs.swapFiles",
-          "group": "navigation@-101",
-          "when": "inDiffEditor"
-        }
-      ]
+      "editor/title": []
     }
   },
   "scripts": {
